@@ -12,31 +12,35 @@ public class LoginPage {
     private WebDriver driver;
     private WebDriverWait wait;
 
-
     private By userIdInput = By.id("formEmail"); 
     private By passwordInput = By.id("formPassword"); 
     private By loginButton = By.className("login-button"); 
     private By maskToggle = By.className("passowrd-visible"); 
     private By errorMessage = By.className("normal-text"); 
+    
+    // Added hard wait (Thread.sleep()) to handle the notification permission div
 
     public LoginPage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
-    public void enterUserId(String userId) {
+    public void enterUserId(String userId) throws InterruptedException {
     	 WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(userIdInput));
          element.sendKeys(userId);
+         Thread.sleep(2000);
     }
 
-    public void enterPassword(String password) {
+    public void enterPassword(String password) throws InterruptedException {
     	WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(passwordInput));
         element.sendKeys(password);
+        Thread.sleep(2000);
     }
 
-    public void clickLoginButton() {
+    public void clickLoginButton() throws InterruptedException {
     	WebElement element = wait.until(ExpectedConditions.elementToBeClickable(loginButton));
         element.click();
+        Thread.sleep(2000);
     }
 
     public boolean isLoginButtonEnabled() {
