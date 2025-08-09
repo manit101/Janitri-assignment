@@ -1,6 +1,8 @@
 package base;
 
 import java.time.Duration;
+import java.util.List;
+import java.util.Optional;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -18,7 +20,7 @@ public class BaseTest {
 	public String baseUrl = "https://dev-dash.janitri.in";
 	
 	@BeforeMethod
-	public void setup() {
+	public void setup() throws InterruptedException {
 	    WebDriverManager.chromedriver().setup();
 
 	    ChromeOptions options = new ChromeOptions();
@@ -26,22 +28,24 @@ public class BaseTest {
 	    driver = new ChromeDriver(options);
 
 	    driver.manage().window().maximize();
-	    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-	    driver.get(baseUrl);
-
-	    driver.navigate().refresh();
+	    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
 	    DevTools devTools = ((ChromeDriver) driver).getDevTools();
 	    devTools.createSession();
-
 	    devTools.send(Browser.grantPermissions(
-	        java.util.List.of(PermissionType.NOTIFICATIONS),
-	        java.util.Optional.of(baseUrl),
-	        java.util.Optional.empty()
+	        List.of(PermissionType.NOTIFICATIONS),
+	        Optional.of(baseUrl),
+	        Optional.empty()
 	    ));
 	    
+	    // Added hard wait (Thread.sleep()) and page refresh to handle the notification permission div
+	    driver.get(baseUrl);
+	   
+	    Thread.sleep(5000);
+	    
 	    driver.navigate().refresh();
+
+	    Thread.sleep(5000);
 	}
 	
 	@AfterMethod
